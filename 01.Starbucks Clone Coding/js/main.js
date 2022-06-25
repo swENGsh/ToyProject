@@ -18,6 +18,7 @@ searchInputEl.addEventListener('blur', function() {
 
 
 const badgeEl = document.querySelector('header .badges')
+const toTopEl = document.querySelector('#to-top')
 // window === 탭 === 브라우저 하나 자체
 window.addEventListener('scroll', _.throttle(function() {
   console.log(window.scrollY)
@@ -28,15 +29,29 @@ window.addEventListener('scroll', _.throttle(function() {
       opacity: 0,
       display: 'none'
     })
+    // 버튼 보이기!
+    gsap.to(toTopEl, .2, {
+      x: 0
+    })
   } else {
     // 배지 보이기
     gsap.to(badgeEl, .6, {
       opacity: 1,
       display: 'block'
     })
+    // 버튼 숨기기!
+    gsap.to(toTopEl, .2, {
+      x: 100
+    })
   }
 }, 300))
 // _.throttle(함수, 시간) : 시간마다 함수 실행
+
+toTopEl.addEventListener('click', function() {
+  gsap.to(window, .7, {
+    scrollTo: 0
+  })
+})
 
 
 const fadeEls = document.querySelectorAll('.visual .fade-in')
@@ -71,6 +86,16 @@ new Swiper('.promotion .swiper-container', {
   navigation: {
     prevEl: '.promotion .swiper-prev',
     nextEl: '.promotion .swiper-next'
+  }
+})
+new Swiper('.awards .swiper', {
+  autoplay: true,
+  loop: true,
+  spaceBetween: 30, // 사이 여백
+  slidesPerView: 5, // 하나의 화면에 몇 개의 슬라이드 보일거냐?
+  navigation: {
+    prevEl: '.awards .swiper-prev',
+    nextEl: '.awards .swiper-next'
   }
 })
 
@@ -121,6 +146,10 @@ spyEls.forEach(function(spyEl) {
       triggerElement: spyEl, // 보여짐 여부를 감시할 요소를 지정
       triggerHook: .8, // 
     })
-    .setClassToggle()
-    .addTo()
+    .setClassToggle(spyEl, 'show')
+    .addTo(new ScrollMagic.Controller())
 })
+
+
+const thisYear = document.querySelector('.this-year')
+thisYear.textContent = new Date().getFullYear() // 올해 년도가 출력됨.
